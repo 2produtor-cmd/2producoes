@@ -31,12 +31,11 @@ app.use(express.urlencoded({ extended: true }));
 // Pool de conexão com PostgreSQL
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  user: process.env.DB_USER,
-  host: process.env.DB_HOST,
-  database: process.env.DB_NAME,
-  password: process.env.DB_PASSWORD,
-  port: process.env.DB_PORT,
-  ssl: process.env.DATABASE_URL || process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+  // O Render exige SSL mesmo para conexões internas em muitos casos.
+  // O 'rejectUnauthorized: false' permite certificados auto-assinados usados pelo Render.
+  ssl: process.env.DATABASE_URL?.includes('render.com') || process.env.NODE_ENV === 'production' 
+    ? { rejectUnauthorized: false } 
+    : false
 });
 
 // Testar conexão

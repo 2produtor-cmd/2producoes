@@ -27,9 +27,12 @@ JWT_SECRET=uma_chave_segura_aqui
 
 ### 4. Criar tabelas
 
-Execute o script SQL em `src/init.sql` no seu cliente PostgreSQL (pgAdmin, DBeaver, etc).
+Você pode criar as tabelas automaticamente rodando o script de migração:
+```bash
+npm run migrate
+```
 
-Ou execute via psql:
+Ou manualmente via psql:
 ```bash
 psql -U postgres -d producoes -f src/init.sql
 ```
