@@ -36,8 +36,13 @@ const isLocalhost = !dbUrl ||
   dbUrl.includes('localhost') || 
   dbUrl.includes('127.0.0.1');
 
-// Validação de segurança para placeholders comuns
-const cleanDbUrl = dbUrl.replace('postgress:', 'postgres:'); // Corrige erro comum de digitação
+/**
+ * Validação e correção de typos comuns na string de conexão.
+ * Corrige o protocolo 'postgress://' ou o usuário 'postgress'.
+ */
+const cleanDbUrl = dbUrl
+  .replace(/^postgress:/, 'postgres:')
+  .replace(/:\/\/postgress:/, '://postgres:');
 
 const poolConfig = cleanDbUrl 
   ? { connectionString: cleanDbUrl }
