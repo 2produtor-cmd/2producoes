@@ -36,26 +36,25 @@ const isLocalhost = !dbUrl ||
   dbUrl.includes('localhost') || 
   dbUrl.includes('127.0.0.1');
 
-/**
- * Validação e correção de typos comuns na string de conexão.
- * Corrige o protocolo 'postgress://' ou o usuário 'postgress'.
- */
-const cleanDbUrl = dbUrl
-  .replace(/^postgress:/, 'postgres:')
-  .replace(/:\/\/postgress:/, '://postgres:');
-
-const poolConfig = cleanDbUrl 
-  ? { connectionString: cleanDbUrl }
+const poolConfig = dbUrl 
+  ? { connectionString: dbUrl }
   : {
-      user: process.env.DB_USER || 'postgres',
+      user: process.env.DB_USER,
       host: process.env.DB_HOST || (isProduction ? 'localhost' : 'localhost'),
       database: process.env.DB_NAME,
       password: process.env.DB_PASSWORD,
       port: process.env.DB_PORT,
     };
 
+// Validação: o usuário do banco de dados não pode ser 'postgres' por segurança
+const detectedUser = dbUrl ? (dbUrl.includes('://') ? dbUrl.split('://')[1].split(/[:@]/)[0] : '') : poolConfig.user;
+if (detectedUser === 'postgres') {
+  console.error('❌ ERRO DE SEGURANÇA: O uso do usuário superusuário "postgres" não é permitido.');
+  if (isProduction) process.exit(1);
+}
+
 // Detectar se o hostname "base" ou "host" (placeholders de exemplo) estão sendo usados
-const isUsingPlaceholder = (cleanDbUrl && (cleanDbUrl.includes('@base') || cleanDbUrl.includes('@host'))) ||
+const isUsingPlaceholder = (dbUrl && (dbUrl.includes('@base') || dbUrl.includes('@host'))) ||
                            (poolConfig.host === 'base' || poolConfig.host === 'host');
 
 if (isProduction && isUsingPlaceholder) {

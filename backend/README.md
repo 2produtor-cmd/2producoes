@@ -19,9 +19,17 @@ CREATE DATABASE producoes;
 
 ### 3. Atualizar `.env`
 
-Edite o arquivo `.env` com suas credenciais PostgreSQL:
+1. Crie um usuário dedicado no PostgreSQL (não use o superusuário `postgres` por segurança):
+```sql
+CREATE USER producoes_app WITH PASSWORD 'escolha_uma_senha_forte';
+GRANT ALL PRIVILEGES ON DATABASE producoes TO producoes_app;
+-- Conecte-se ao banco e execute:
+GRANT ALL ON SCHEMA public TO producoes_app;
+```
+
+2. Edite o arquivo `.env` com as novas credenciais:
 ```env
-DATABASE_URL=postgresql://postgress:senha@host:porta/producoes
+DATABASE_URL=postgresql://producoes_zo6o_user:F060aivVt7yPecTE4NLtgIo9rdzDIKf6@dpg-d8bfqhfavr4c7392uurg-a.frankfurt-postgres.render.com/producoes_zo6o
 JWT_SECRET=uma_chave_segura_aqui
 ```
 

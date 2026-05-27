@@ -110,11 +110,11 @@ CREATE INDEX IF NOT EXISTS idx_eventos_data ON eventos(data);
 CREATE INDEX IF NOT EXISTS idx_financeiro_mes ON financeiro(mes);
 CREATE INDEX IF NOT EXISTS idx_pessoas_email ON pessoas(email);
 
--- Inserir usuário padrão (senha: admin123)
+-- Inserir usuário administrador padrão
 INSERT INTO usuarios (email, senha, nome, role) VALUES (
   'admin@2producoes.com.br',
   '$2a$10$Y6bKvF6LQzHr4Qj5F5K5QeX8gMhOmVh2Oy3qY9j7Z5K8x7M6n3j8', -- bcrypt hash de "admin123"
-  'Administrador',
+  'Gestor Geral',
   'admin'
 ) ON CONFLICT (email) DO NOTHING;
 
