@@ -29,15 +29,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Pool de conexão com PostgreSQL
-const isLocalhost = !process.env.DATABASE_URL ||
-  process.env.DATABASE_URL.includes('localhost') ||
-  process.env.DATABASE_URL.includes('127.0.0.1');
+const dbUrl = process.env.DATABASE_URL || process.env.DB_URL;
+const isProduction = process.env.NODE_ENV === 'production' || !!process.env.RENDER;
 
-const poolConfig = process.env.DATABASE_URL 
-  ? { connectionString: process.env.DATABASE_URL }
+const isLocalhost = !dbUrl || 
+  dbUrl.includes('localhost') || 
+  dbUrl.includes('127.0.0.1');
+
+const poolConfig = dbUrl 
+  ? { connectionString: dbUrl }
   : {
       user: process.env.DB_USER,
-      host: process.env.DB_HOST,
+      host: process.env.DB_HOST || 'localhost',
       database: process.env.DB_NAME,
       password: process.env.DB_PASSWORD,
       port: process.env.DB_PORT,
@@ -45,8 +48,8 @@ const poolConfig = process.env.DATABASE_URL
 
 export const pool = new Pool({
   ...poolConfig,
-  // SSL apenas se não for localhost e houver uma URL de banco
-  ssl: isLocalhost ? false : { rejectUnauthorized: false }
+  // Render e outros serviços de nuvem exigem SSL
+  ssl: (isProduction && !isLocalhost) ? { rejectUnauthorized: false } : false
 });
 
 // Testar conexão
@@ -94,7 +97,8 @@ const PORT = process.env.PORT || 3001;
 if (process.argv[1] === __filename) {
   app.listen(PORT, () => {
     console.log(`🚀 Servidor rodando em http://localhost:${PORT}`);
-    console.log(`📊 Banco de dados: ${process.env.DATABASE_URL ? 'Online (DATABASE_URL)' : process.env.DB_NAME}`);
+    console.log(`📊 Modo: ${isProduction ? 'Produção' : 'Desenvolvimento'}`);
+    console.log(`🔗 Conexão: ${dbUrl ? 'DATABASE_URL detectada' : 'Usando variáveis individuais'}`);
   });
 }
 
