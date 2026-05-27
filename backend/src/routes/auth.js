@@ -57,9 +57,9 @@ router.post('/login', async (req, res) => {
 // POST /auth/register (opcional)
 router.post('/register', async (req, res) => {
   try {
-    const { email, password, nome } = req.body;
+    const { email, senha: password, nome } = req.body;
 
-    if (!email || !password || !nome) {
+    if (!email || password === undefined || !nome) {
       return res.status(400).json({ error: 'Email, senha e nome são obrigatórios' });
     }
 

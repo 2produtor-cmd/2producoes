@@ -63,7 +63,7 @@ curl -X POST http://localhost:3001/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "admin@2producoes.com.br",
-    "password": "admin123"
+    "senha": "admin123"
   }'
 ```
 
