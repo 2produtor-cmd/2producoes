@@ -12,6 +12,7 @@ import Financeiro from './pages/Financeiro';
 import Eventos from './pages/Eventos';
 import Documentos from './pages/Documentos';
 import Pessoas from './pages/Pessoas';
+import Register from './pages/Register'; // Importar o novo componente
 import Usuarios from './pages/Usuarios';
 
 function RotaProtegida({ children }) {
@@ -26,6 +27,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} /> {/* Nova rota para registro */}
           <Route path="/inscricao" element={<InscricaoPublica />} />
           <Route path="/*" element={
             <RotaProtegida>
