@@ -20,13 +20,8 @@ CREATE DATABASE producoes;
 ### 3. Atualizar `.env`
 
 Edite o arquivo `.env` com suas credenciais PostgreSQL:
-
 ```env
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=producoes
-DB_USER=seu_usuario_postgres
-DB_PASSWORD=sua_senha
+DATABASE_URL=postgresql://usuario:senha@host:porta/banco
 JWT_SECRET=uma_chave_segura_aqui
 ```
 
