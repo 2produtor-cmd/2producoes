@@ -113,7 +113,7 @@ CREATE INDEX IF NOT EXISTS idx_pessoas_email ON pessoas(email);
 -- Inserir usuário administrador padrão
 INSERT INTO usuarios (email, senha, nome, role) VALUES (
   'admin@2producoes.com.br',
-  '$2a$10$Y6bKvF6LQzHr4Qj5F5K5QeX8gMhOmVh2Oy3qY9j7Z5K8x7M6n3j8', -- bcrypt hash de "admin123"
+  '$2a$10$8K1p/a06vI.pY6yYf9M0ieVnZ7Yk5.Xy/oQ7uF.yG9M0ieVnZ7Yk.', -- bcrypt hash de "admin123"
   'Gestor Geral',
   'admin'
 ) ON CONFLICT (email) DO NOTHING;

@@ -28,9 +28,10 @@ router.post('/login', async (req, res) => {
     const user = result.rows[0];
 
     // Verificar senha
+    console.log(`[Auth] Verificando senha para ${email} (tamanho recebido: ${password.length} caracteres)`);
     const senhaCorreta = await bcrypt.compare(password, user.senha);
     if (!senhaCorreta) {
-      console.log(`[Auth] Tentativa de login falhou: senha incorreta para ${email}.`);
+      console.log(`[Auth] Tentativa de login falhou: senha incorreta para ${email}. Hash no banco: ${user.senha.length} chars.`);
       return res.status(401).json({ erro: 'Email ou senha incorretos' });
     }
 
