@@ -67,8 +67,7 @@ router.put('/:id', verificarToken, async (req, res) => {
     const { nome, data, descricao, local } = req.body;
 
     const result = await pool.query(
-      'UPDATE eventos SET nome = COALESCE($2, nome), data = COALESCE($3, data), descricao = COALESCE($4, descricao), local = COALESCE($5, local) WHERE id = $1 RETURNING id, nome, data, descricao, local',
-      [id, nome, data, descricao, local]
+      'UPDATE eventos SET nome = COALESCE($2, nome), data = COALESCE($3, data), descricao = COALESCE($4, descricao), local = COALESCE($5, local), updated_at = NOW() WHERE id = $1 RETURNING id, nome, data, descricao, local',
       [id, nome || null, data || null, descricao || null, local || null]
     );
 

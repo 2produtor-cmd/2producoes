@@ -79,7 +79,8 @@ CREATE TABLE eventos (
   data DATE NOT NULL,
   descricao TEXT,
   local VARCHAR(255),
-  created_at TIMESTAMP DEFAULT NOW()
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
 );
 
 -- Tabela de financeiro
