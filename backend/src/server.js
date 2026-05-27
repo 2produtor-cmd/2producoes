@@ -29,15 +29,20 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Pool de conexão com PostgreSQL
+const isLocalhost = !process.env.DATABASE_URL || 
+                   process.env.DATABASE_URL.includes('localhost') || 
+                   process.env.DATABASE_URL.includes('127.0.0.1');
+
 export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
-  // O Render exige SSL. Como a URL interna não possui o sufixo ".render.com", 
-  // verificamos se não estamos em localhost para ativar o SSL com certificados auto-assinados.
-  ssl: process.env.DATABASE_URL && 
-       !process.env.DATABASE_URL.includes('localhost') && 
-       !process.env.DATABASE_URL.includes('127.0.0.1')
-    ? { rejectUnauthorized: false }
-    : false
+  // Fallback para variáveis individuais caso DATABASE_URL não exista
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,
+  // SSL apenas se não for localhost e houver uma URL de banco
+  ssl: isLocalhost ? false : { rejectUnauthorized: false }
 });
 
 // Testar conexão

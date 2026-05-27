@@ -11,7 +11,7 @@ router.post('/login', async (req, res) => {
     const { email, senha: password } = req.body;
 
     if (!email || password === undefined) {
-      return res.status(400).json({ error: 'Email e senha são obrigatórios' });
+      return res.status(400).json({ erro: 'Email e senha são obrigatórios' });
     }
 
     // Buscar usuário no banco
@@ -21,7 +21,7 @@ router.post('/login', async (req, res) => {
     );
 
     if (result.rows.length === 0) {
-      return res.status(401).json({ error: 'Email ou senha incorretos' });
+      return res.status(401).json({ erro: 'Email ou senha incorretos' });
     }
 
     const user = result.rows[0];
@@ -29,7 +29,7 @@ router.post('/login', async (req, res) => {
     // Verificar senha
     const senhaCorreta = await bcrypt.compare(password, user.senha);
     if (!senhaCorreta) {
-      return res.status(401).json({ error: 'Email ou senha incorretos' });
+      return res.status(401).json({ erro: 'Email ou senha incorretos' });
     }
 
     // Gerar JWT
@@ -50,7 +50,7 @@ router.post('/login', async (req, res) => {
     });
   } catch (err) {
     console.error('Erro no login:', err);
-    res.status(500).json({ error: 'Erro ao fazer login' });
+    res.status(500).json({ erro: 'Erro ao fazer login' });
   }
 });
 
@@ -60,7 +60,7 @@ router.post('/register', async (req, res) => {
     const { email, senha: password, nome } = req.body;
 
     if (!email || password === undefined || !nome) {
-      return res.status(400).json({ error: 'Email, senha e nome são obrigatórios' });
+      return res.status(400).json({ erro: 'Email, senha e nome são obrigatórios' });
     }
 
     // Verificar se usuário já existe
@@ -70,7 +70,7 @@ router.post('/register', async (req, res) => {
     );
 
     if (existing.rows.length > 0) {
-      return res.status(400).json({ error: 'Email já cadastrado' });
+      return res.status(400).json({ erro: 'Email já cadastrado' });
     }
 
     // Hash da senha
@@ -102,7 +102,7 @@ router.post('/register', async (req, res) => {
     });
   } catch (err) {
     console.error('Erro no registro:', err);
-    res.status(500).json({ error: 'Erro ao registrar' });
+    res.status(500).json({ erro: 'Erro ao registrar' });
   }
 });
 
