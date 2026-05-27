@@ -58,7 +58,16 @@ export default function Login() {
             {loading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
-        <p style={styles.hint}>Admin padrão: admin@2producoes.com.br / admin123</p>
+          <div style={styles.registerSection}>
+            <p style={styles.registerText}>Ainda não tem acesso?</p>
+            <button 
+              type="button" 
+              onClick={() => navigate('/register')} 
+              style={styles.btnSecondary}
+            >
+              Cadastrar Novo Usuário
+            </button>
+          </div>
       </div>
     </div>
   );
@@ -76,5 +85,7 @@ const styles = {
   label: { fontSize: 13, fontWeight: 600, color: '#444' },
   input: { padding: '12px 14px', border: '2px solid #e5e7eb', borderRadius: 8, fontSize: 14, outline: 'none', transition: 'border-color 0.2s' },
   btn: { padding: '14px', background: 'linear-gradient(135deg, #1a1a2e, #0f3460)', color: 'white', border: 'none', borderRadius: 8, fontSize: 15, fontWeight: 700, cursor: 'pointer', marginTop: 4 },
-  hint: { textAlign: 'center', fontSize: 11, color: '#aaa', marginTop: 20 }
+  registerSection: { marginTop: 24, paddingTop: 24, borderTop: '1px solid #f1f5f9', textAlign: 'center' },
+  registerText: { fontSize: 13, color: '#6b7280', marginBottom: 12 },
+  btnSecondary: { width: '100%', padding: '12px', background: 'white', color: '#1a1a2e', border: '2px solid #1a1a2e', borderRadius: 8, fontSize: 14, fontWeight: 700, cursor: 'pointer', transition: 'all 0.2s' }
 };
