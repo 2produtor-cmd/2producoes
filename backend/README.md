@@ -21,7 +21,7 @@ CREATE DATABASE producoes;
 
 Edite o arquivo `.env` com suas credenciais PostgreSQL:
 ```env
-DATABASE_URL=postgresql://usuario:senha@host:porta/banco
+DATABASE_URL=postgresql://postgress:senha@host:porta/producoes
 JWT_SECRET=uma_chave_segura_aqui
 ```
 
