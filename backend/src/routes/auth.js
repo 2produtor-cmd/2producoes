@@ -32,6 +32,11 @@ router.post('/login', async (req, res) => {
       return res.status(401).json({ erro: 'Email ou senha incorretos' });
     }
 
+    if (!process.env.JWT_SECRET) {
+      console.error('ERRO: JWT_SECRET não definida no arquivo .env');
+      return res.status(500).json({ erro: 'Erro interno de configuração do servidor' });
+    }
+
     // Gerar JWT
     const token = jwt.sign(
       { id: user.id, email: user.email, nome: user.nome },
