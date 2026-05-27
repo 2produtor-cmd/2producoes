@@ -29,22 +29,33 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Pool de conexão com PostgreSQL
-const dbUrl = process.env.DATABASE_URL || process.env.DB_URL;
+const dbUrl = process.env.DATABASE_URL || process.env.DB_URL || '';
 const isProduction = process.env.NODE_ENV === 'production' || !!process.env.RENDER;
 
-const isLocalhost = !dbUrl || 
+const isLocalhost = !dbUrl ||
   dbUrl.includes('localhost') || 
   dbUrl.includes('127.0.0.1');
 
-const poolConfig = dbUrl 
-  ? { connectionString: dbUrl }
+// Validação de segurança para placeholders comuns
+const cleanDbUrl = dbUrl.replace('postgress:', 'postgres:'); // Corrige erro comum de digitação
+
+const poolConfig = cleanDbUrl 
+  ? { connectionString: cleanDbUrl }
   : {
-      user: process.env.DB_USER,
-      host: process.env.DB_HOST || 'localhost',
+      user: process.env.DB_USER || 'postgres',
+      host: process.env.DB_HOST || (isProduction ? 'localhost' : 'localhost'),
       database: process.env.DB_NAME,
       password: process.env.DB_PASSWORD,
       port: process.env.DB_PORT,
     };
+
+// Detectar se o hostname "base" ou "host" (placeholders de exemplo) estão sendo usados
+const isUsingPlaceholder = (cleanDbUrl && (cleanDbUrl.includes('@base') || cleanDbUrl.includes('@host'))) ||
+                           (poolConfig.host === 'base' || poolConfig.host === 'host');
+
+if (isProduction && isUsingPlaceholder) {
+  console.error('❌ ERRO CRÍTICO: O hostname do banco de dados está configurado com um valor de exemplo ("base" ou "host"). Verifique suas variáveis de ambiente no Render.');
+}
 
 export const pool = new Pool({
   ...poolConfig,

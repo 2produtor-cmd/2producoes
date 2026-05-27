@@ -4,7 +4,7 @@
 -- Conectar ao banco producoes e executar:
 
 -- Tabela de usuários
-CREATE TABLE usuarios (
+CREATE TABLE IF NOT EXISTS usuarios (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   email VARCHAR(255) UNIQUE NOT NULL,
   senha VARCHAR(255) NOT NULL,
@@ -15,7 +15,7 @@ CREATE TABLE usuarios (
 );
 
 -- Tabela de projetos
-CREATE TABLE projetos (
+CREATE TABLE IF NOT EXISTS projetos (
   id UUID PRIMARY KEY,
   nome VARCHAR(255) NOT NULL,
   descricao TEXT,
@@ -25,7 +25,7 @@ CREATE TABLE projetos (
 );
 
 -- Tabela de inscrições
-CREATE TABLE inscricoes (
+CREATE TABLE IF NOT EXISTS inscricoes (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   protocolo VARCHAR(20) UNIQUE,
   projeto_id UUID,
@@ -73,7 +73,7 @@ CREATE TABLE inscricoes (
 );
 
 -- Tabela de eventos
-CREATE TABLE eventos (
+CREATE TABLE IF NOT EXISTS eventos (
   id UUID PRIMARY KEY,
   nome VARCHAR(255) NOT NULL,
   data DATE NOT NULL,
@@ -84,7 +84,7 @@ CREATE TABLE eventos (
 );
 
 -- Tabela de financeiro
-CREATE TABLE financeiro (
+CREATE TABLE IF NOT EXISTS financeiro (
   id UUID PRIMARY KEY,
   mes VARCHAR(7) NOT NULL,
   entradas DECIMAL(10, 2) DEFAULT 0,
@@ -93,7 +93,7 @@ CREATE TABLE financeiro (
 );
 
 -- Tabela de pessoas
-CREATE TABLE pessoas (
+CREATE TABLE IF NOT EXISTS pessoas (
   id UUID PRIMARY KEY,
   nome VARCHAR(255) NOT NULL,
   email VARCHAR(255),
@@ -103,12 +103,12 @@ CREATE TABLE pessoas (
 );
 
 -- Criar índices para melhor performance
-CREATE INDEX idx_usuarios_email ON usuarios(email);
-CREATE INDEX idx_inscricoes_projeto_id ON inscricoes(projeto_id);
-CREATE INDEX idx_inscricoes_email ON inscricoes(email);
-CREATE INDEX idx_eventos_data ON eventos(data);
-CREATE INDEX idx_financeiro_mes ON financeiro(mes);
-CREATE INDEX idx_pessoas_email ON pessoas(email);
+CREATE INDEX IF NOT EXISTS idx_usuarios_email ON usuarios(email);
+CREATE INDEX IF NOT EXISTS idx_inscricoes_projeto_id ON inscricoes(projeto_id);
+CREATE INDEX IF NOT EXISTS idx_inscricoes_email ON inscricoes(email);
+CREATE INDEX IF NOT EXISTS idx_eventos_data ON eventos(data);
+CREATE INDEX IF NOT EXISTS idx_financeiro_mes ON financeiro(mes);
+CREATE INDEX IF NOT EXISTS idx_pessoas_email ON pessoas(email);
 
 -- Inserir usuário padrão (senha: admin123)
 INSERT INTO usuarios (email, senha, nome, role) VALUES (
@@ -116,25 +116,30 @@ INSERT INTO usuarios (email, senha, nome, role) VALUES (
   '$2a$10$Y6bKvF6LQzHr4Qj5F5K5QeX8gMhOmVh2Oy3qY9j7Z5K8x7M6n3j8', -- bcrypt hash de "admin123"
   'Administrador',
   'admin'
-);
+) ON CONFLICT (email) DO NOTHING;
 
 -- Inserir dados de exemplo
 INSERT INTO projetos (id, nome, descricao, status) VALUES 
   ('550e8400-e29b-41d4-a716-446655440000', 'Festival de Artes', 'Festival anual de artes culturais', 'ativo'),
-  ('550e8400-e29b-41d4-a716-446655440001', 'Workshop de Teatro', 'Oficina de teatro para iniciantes', 'ativo');
+  ('550e8400-e29b-41d4-a716-446655440001', 'Workshop de Teatro', 'Oficina de teatro para iniciantes', 'ativo')
+ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO inscricoes (id, projeto_id, nome_completo, email, status) VALUES 
   ('550e8400-e29b-41d4-a716-446655440010', '550e8400-e29b-41d4-a716-446655440000', 'João Silva', 'joao@email.com', 'confirmada'),
-  ('550e8400-e29b-41d4-a716-446655440011', '550e8400-e29b-41d4-a716-446655440000', 'Maria Santos', 'maria@email.com', 'pendente');
+  ('550e8400-e29b-41d4-a716-446655440011', '550e8400-e29b-41d4-a716-446655440000', 'Maria Santos', 'maria@email.com', 'pendente')
+ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO eventos (id, nome, data, descricao, local) VALUES 
   ('550e8400-e29b-41d4-a716-446655440020', 'Abertura do Festival', '2026-06-15', 'Evento de abertura', 'Teatro Municipal'),
-  ('550e8400-e29b-41d4-a716-446655440021', 'Workshop Prático', '2026-06-20', 'Prática de teatro', 'Estúdio de Artes');
+  ('550e8400-e29b-41d4-a716-446655440021', 'Workshop Prático', '2026-06-20', 'Prática de teatro', 'Estúdio de Artes')
+ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO financeiro (id, mes, entradas, saidas) VALUES 
   ('550e8400-e29b-41d4-a716-446655440030', '2026-05', 5000.00, 2000.00),
-  ('550e8400-e29b-41d4-a716-446655440031', '2026-06', 8000.00, 3500.00);
+  ('550e8400-e29b-41d4-a716-446655440031', '2026-06', 8000.00, 3500.00)
+ON CONFLICT (id) DO NOTHING;
 
 INSERT INTO pessoas (id, nome, email, telefone, papel) VALUES 
   ('550e8400-e29b-41d4-a716-446655440040', 'João Silva', 'joao@email.com', '11987654321', 'produtor'),
-  ('550e8400-e29b-41d4-a716-446655440041', 'Maria Santos', 'maria@email.com', '11987654322', 'coordenadora');
+  ('550e8400-e29b-41d4-a716-446655440041', 'Maria Santos', 'maria@email.com', '11987654322', 'coordenadora')
+ON CONFLICT (id) DO NOTHING;

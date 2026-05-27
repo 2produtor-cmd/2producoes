@@ -21,6 +21,7 @@ router.post('/login', async (req, res) => {
     );
 
     if (result.rows.length === 0) {
+      console.log(`[Auth] Tentativa de login falhou: usuário ${email} não encontrado.`);
       return res.status(401).json({ erro: 'Email ou senha incorretos' });
     }
 
@@ -29,6 +30,7 @@ router.post('/login', async (req, res) => {
     // Verificar senha
     const senhaCorreta = await bcrypt.compare(password, user.senha);
     if (!senhaCorreta) {
+      console.log(`[Auth] Tentativa de login falhou: senha incorreta para ${email}.`);
       return res.status(401).json({ erro: 'Email ou senha incorretos' });
     }
 
@@ -38,6 +40,7 @@ router.post('/login', async (req, res) => {
     }
 
     // Gerar JWT
+    console.log(`[Auth] Login bem-sucedido: ${email}`);
     const token = jwt.sign(
       { id: user.id, email: user.email, nome: user.nome },
       process.env.JWT_SECRET,
