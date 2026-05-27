@@ -7,16 +7,42 @@ function Register() {
   const [nome, setNome] = useState('');
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
+  const validate = () => {
+    if (nome.trim().length < 3) {
+      toast.error('O nome deve ter pelo menos 3 caracteres');
+      return false;
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error('Por favor, insira um e-mail válido');
+      return false;
+    }
+
+    if (senha.length < 6) {
+      toast.error('A senha deve ter pelo menos 6 caracteres');
+      return false;
+    }
+
+    return true;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validate()) return;
+
+    setLoading(true);
     try {
       await api.post('/auth/register', { nome, email, senha });
       toast.success('Usuário registrado com sucesso! Faça login para continuar.');
       navigate('/login');
     } catch (error) {
       toast.error(error.response?.data?.erro || 'Erro ao registrar usuário');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -45,7 +71,9 @@ function Register() {
           onChange={(e) => setSenha(e.target.value)}
           required
         />
-        <button type="submit">Registrar</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Cadastrando...' : 'Registrar'}
+        </button>
       </form>
       <p>
         Já tem uma conta?{' '}
